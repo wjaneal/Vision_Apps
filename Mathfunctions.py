@@ -40,11 +40,12 @@ def Line_Intersection_2D(l1, l2):
         m2 = l1.m[1]
         n1 = l2.m[0]
         n2 = l2.m[1]
-	print "Testing", m1, m2, n1, n2
+	#print "Testing", m1, m2, n1, n2
 	l = (m1*(y2-y1)-m2*(x2-x1))/(m2*n1-m1*n2) 
 	k = (x2-x1+l*n1)/m1
 	x = x2+l*n1
 	y = y2+l*n2
+	print "(x,y)", x, y
 	return [l,k,x,y]
 
 def Line_Intersection_3D(l1, l2):

@@ -8,7 +8,7 @@
 import pygame
 import pygame.camera
 import pygame.image
-from PIL import Image
+from PIL import Image, ImageDraw
 from pygame.locals import *
 #Random and Datetime
 from random import *
@@ -25,7 +25,7 @@ def ComparePixels(P1,P2,tolerance):
 	else:
 		return False
 
-def ProcessPhoto(BasePhoto, ActivePhoto, Tolerance, ForegroundColour, BackgroundColour, X_SIZE, Y_SIZE, filename):
+def ProcessPhoto(BasePhoto, ActivePhoto, Tolerance, BackgroundColour, ForegroundColour, X_SIZE, Y_SIZE, filename):
         PositiveColour = ForegroundColour
         NegativeColour = BackgroundColour
         #BasePhoto = Image.open(BasePhoto)
@@ -78,22 +78,24 @@ def SquareOverlay(ForegroundPhoto, BackgroundPhotoRaw, PositiveColour, NegativeC
 	#Paste these into the BackgroundPhoto to create the ResultPhoto
 	X_Squares = int(X_SIZE/(2*Size+1))
 	Y_Squares = int(Y_SIZE/(2*Size+1))
-	ResultPhotoRaw = BackgroundPhotoRaw
+	ResultPhotoRaw = Image.new("RGB", (X_SIZE, Y_SIZE), (0,0,0))
         ResultPhotoRaw.save("TestSquareOverlay.PNG")
         ResultPhoto = ResultPhotoRaw.load()
+	draw = ImageDraw.Draw(ResultPhotoRaw)
 	for x in range(0, X_Squares):
 		for y in range(0, Y_Squares):
-			X = Size*x+Size
-			Y = Size*y+Size
+			X = (2*Size+1)*x+Size
+			Y = (2*Size+1)*y+Size
+			#print X, Y
 			Check = True
 			for xi in range(X-Size, X+Size):
 				for yi in range(Y-Size, Y+Size):
 					if ForegroundPhoto[xi,yi] == NegativeColour:
 						Check = False
+			
 			if Check == True:
-				for xi in range(X-Size, X+Size):
-					for yi in range(Y-Size, Y+Size):
-						ResultPhoto[xi,yi] = PositiveColour
+				draw.rectangle(((X-Size, Y-Size),(X+Size, Y+Size)), "white")
+				print X,Y
 	ResultPhotoRaw.save("Testing.PNG")
         return ResultPhotoRaw
 	
@@ -167,7 +169,7 @@ BackgroundPhoto = BackgroundPhotoRaw.load()
 #		ResultPhoto[x,y] = PixelDecision(NeighborhoodForeground, NeighborhoodBackground, PositiveColour, NegativeColour)
 
 #Option 2: Use the SquareOverlay Algorithm to fill in the Object on the Background Photo, saving the result 
-SquareSize = 4
+SquareSize = 5
 ResultPhoto = SquareOverlay(ForegroundPhoto, BackgroundPhotoRaw, PositiveColour, NegativeColour, SquareSize, X_SIZE, Y_SIZE)
 
 datenow = date.today()

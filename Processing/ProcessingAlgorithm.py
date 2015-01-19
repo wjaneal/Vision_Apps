@@ -51,38 +51,38 @@ print Y_SIZE
 
 #def getPixel(X, Y)
 	#return - RGB colour of Pixel
-
-#scan photo and compare
-Tolerance = 6 #Set to an arbitrary quantity for later calibration
-PositiveColour = (0,0,0)
-NegativeColour = (255,255,255)
-BasePhoto = Image.open('BasePhotoRaw.PNG')
-BasePhoto = BasePhoto.load()
-ActivePhoto = Image.open('ActivePhotoRaw.PNG')
-ActivePhoto = ActivePhoto.load()
-ResultPhotoRaw = Image.new("RGB", (X_SIZE, Y_SIZE), (255,255,255))
-ResultPhotoRaw.save("ResultPhotoRaw.PNG")
-ResultPhoto = Image.open('ResultPhotoRaw.PNG')
-ResultPhoto = ResultPhoto.load()
-
-
-ResultPhoto = ResultPhotoRaw.load()
-for x in range(0, X_SIZE):
-	for y in range(0, Y_SIZE):
-		Base = BasePhoto[x,y]
-		Active = ActivePhoto[x,y]
-		if ComparePixels(Base, Active, Tolerance):
-			ResultPhoto[x,y] = PositiveColour
-		else:
-			ResultPhoto[x,y]= NegativeColour
-
-datenow = date.today()
-timenow = str(datetime.now()).strip('.')
-print timenow
-filename = "Result"+str(Tolerance)+str(timenow)+'.PNG'
-ResultPhotoRaw.save(filename)
-
-#analyse data set
+for test_tolerance in range (1,40):
+	#scan photo and compare
+	Tolerance = test_tolerance #Set to an arbitrary quantity for later calibration
+	PositiveColour = (0,0,0)
+	NegativeColour = (255,255,255)
+	BasePhoto = Image.open('BasePhotoRaw.PNG')
+	BasePhoto = BasePhoto.load()
+	ActivePhoto = Image.open('ActivePhotoRaw.PNG')
+	ActivePhoto = ActivePhoto.load()
+	ResultPhotoRaw = Image.new("RGB", (X_SIZE, Y_SIZE), (255,255,255))
+	ResultPhotoRaw.save("ResultPhotoRaw.PNG")
+	ResultPhoto = Image.open('ResultPhotoRaw.PNG')
+	ResultPhoto = ResultPhoto.load()
+	
+	
+	ResultPhoto = ResultPhotoRaw.load()
+	for x in range(0, X_SIZE):
+		for y in range(0, Y_SIZE):
+			Base = BasePhoto[x,y]
+			Active = ActivePhoto[x,y]
+			if ComparePixels(Base, Active, Tolerance):
+				ResultPhoto[x,y] = PositiveColour
+			else:
+				ResultPhoto[x,y]= NegativeColour
+	
+	datenow = date.today()
+	timenow = str(datetime.now()).strip('.')
+	print timenow
+	filename = "Result"+str(Tolerance)+str(timenow)+'.PNG'
+	ResultPhotoRaw.save(filename)
+	
+	#analyse data set
 	#Check (Xav,Yav):
 		#whole photo
 		#horizontal stripes
